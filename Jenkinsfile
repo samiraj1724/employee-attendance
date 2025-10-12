@@ -6,12 +6,26 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/samiraj1724/employee-attendance.git' 
             }
         }
+
+        stage('Check Workspace') {
+            steps {
+                sh '''
+                echo "Current workspace path:"
+                pwd
+                echo "Files in workspace:"
+                ls -l
+                '''
+            }
+        }
+
         stage('Build') {
             steps { sh 'mvn clean package' }
         }
+
         stage('Docker Build') {
             steps { sh 'docker build -t employee-attendance:latest .' }
         }
+
         stage('Docker Run') {
             steps {
                 sh 'docker stop employee-attendance || true'
